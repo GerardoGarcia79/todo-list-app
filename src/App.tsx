@@ -11,25 +11,38 @@ function App() {
       title: title,
       id: tasks.length + 1,
       isCompleted: false,
+      isEditing: false,
     };
 
     setTasks([...tasks, newTask]);
   };
 
-  const toggleCompletedTask = (index: Task) => {
-    return index.isCompleted ? false : true;
+  const deleteTask = (id: number) => {
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   const changeCompletedTask = (id: number) => {
-    const index = tasks.find((t) => t.id === id);
-    const toggle = toggleCompletedTask(index!);
     setTasks(
-      tasks.map((t) => (t.id === id ? { ...t, isCompleted: toggle } : t))
+      tasks.map((t) =>
+        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
+      )
     );
   };
 
-  const deleteTask = (id: number) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+  const changeIsEditingTask = (id: number) => {
+    setTasks(
+      tasks.map((t) => (t.id === id ? { ...t, isEditing: !t.isEditing } : t))
+    );
+  };
+
+  const updateTask = (id: number, value: string) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id
+          ? { ...task, isEditing: !task.isEditing, title: value }
+          : task
+      )
+    );
   };
 
   return (
@@ -39,6 +52,8 @@ function App() {
         <TasksList
           tasks={tasks}
           changeCompletedTask={(id) => changeCompletedTask(id)}
+          changeIsEditingTask={(id) => changeIsEditingTask(id)}
+          updateTask={(id, value) => updateTask(id, value)}
           deleteTask={(id) => deleteTask(id)}
         />
       </div>
