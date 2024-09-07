@@ -2,6 +2,7 @@ import {
   IoIosCheckmarkCircle,
   IoIosCheckmarkCircleOutline,
 } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 
 export interface Task {
   title: string;
@@ -11,17 +12,18 @@ export interface Task {
 
 interface Props {
   tasks: Task[];
-  toggleCompletedTask: (id: number) => void;
+  changeCompletedTask: (id: number) => void;
+  deleteTask: (id: number) => void;
 }
 
-const TasksList = ({ tasks, toggleCompletedTask }: Props) => {
+const TasksList = ({ tasks, changeCompletedTask, deleteTask }: Props) => {
   return (
     <ul className="p-3">
       {tasks.map((task) => (
-        <li key={task.id}>
+        <li key={task.id} className="flex justify-between">
           <div
-            onClick={() => toggleCompletedTask(task.id)}
-            className="flex justify-start items-center cursor-pointer"
+            onClick={() => changeCompletedTask(task.id)}
+            className="flex flex-grow justify-start items-center cursor-pointer"
           >
             {task.isCompleted ? (
               <IoIosCheckmarkCircle size="24px" />
@@ -36,6 +38,9 @@ const TasksList = ({ tasks, toggleCompletedTask }: Props) => {
               {task.title}
             </div>
           </div>
+          <button onClick={() => deleteTask(task.id)}>
+            <MdDelete size="24px" />
+          </button>
         </li>
       ))}
     </ul>

@@ -28,13 +28,18 @@ function App() {
     );
   };
 
+  const deleteTask = (id: number) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
   return (
     <div className="h-screen bg-black flex justify-center">
       <div className="bg-gray-700 w-full max-w-3xl mt-24 h-fit rounded-md p-3">
         <Header addTask={(title) => addTask(title)} />
         <TasksList
           tasks={tasks}
-          toggleCompletedTask={(id) => changeCompletedTask(id)}
+          changeCompletedTask={(id) => changeCompletedTask(id)}
+          deleteTask={(id) => deleteTask(id)}
         />
       </div>
     </div>
