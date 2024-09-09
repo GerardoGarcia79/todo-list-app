@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import TasksList, { Task } from "./components/TasksList";
 import FilterTasks from "./components/FilterTasks";
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [tasks, setTasks] = useState<Task[]>(
+    localStorage.getItem("tasks")
+      ? JSON.parse(localStorage.getItem("tasks")!)
+      : []
+  );
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>(
+    localStorage.getItem("filteredTasks")
+      ? JSON.parse(localStorage.getItem("filteredTasks")!)
+      : []
+  );
+  const [selectedFilter, setSelectedFilter] = useState(
+    localStorage.getItem("filter") ? localStorage.getItem("filter") : ""
+  );
 
   const addTask = (title: string) => {
     const newTask = {
@@ -58,6 +68,12 @@ function App() {
     else setFilteredTasks([]);
   };
 
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("filteredTasks", JSON.stringify(filteredTasks));
+    localStorage.setItem("filter", selectedFilter!);
+  }, [tasks, filteredTasks, selectedFilter]);
+
   return (
     <div className="h-screen bg-black flex justify-center">
       <div className="bg-gray-700 w-full max-w-3xl mt-24 h-fit rounded-md p-5">
@@ -65,7 +81,7 @@ function App() {
         {tasks.length > 0 ? (
           <FilterTasks
             filterTasks={filterTasks}
-            selectedFilter={selectedFilter}
+            selectedFilter={selectedFilter!}
           />
         ) : null}
         <TasksList
