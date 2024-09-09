@@ -2,9 +2,12 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import TasksList, { Task } from "./components/TasksList";
+import FilterTasks from "./components/FilterTasks";
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   const addTask = (title: string) => {
     const newTask = {
@@ -45,12 +48,28 @@ function App() {
     );
   };
 
+  const filterTasks = (selectedFilter: string) => {
+    setSelectedFilter(selectedFilter);
+
+    if (selectedFilter === "completed")
+      setFilteredTasks(tasks.filter((task) => task.isCompleted));
+    else if (selectedFilter === "pending")
+      setFilteredTasks(tasks.filter((task) => !task.isCompleted));
+    else setFilteredTasks([]);
+  };
+
   return (
     <div className="h-screen bg-black flex justify-center">
-      <div className="bg-gray-700 w-full max-w-3xl mt-24 h-fit rounded-md p-3">
+      <div className="bg-gray-700 w-full max-w-3xl mt-24 h-fit rounded-md p-5">
         <Header addTask={(title) => addTask(title)} />
+        {tasks.length > 0 ? (
+          <FilterTasks
+            filterTasks={filterTasks}
+            selectedFilter={selectedFilter}
+          />
+        ) : null}
         <TasksList
-          tasks={tasks}
+          tasks={selectedFilter ? filteredTasks : tasks}
           changeCompletedTask={(id) => changeCompletedTask(id)}
           changeIsEditingTask={(id) => changeIsEditingTask(id)}
           updateTask={(id, value) => updateTask(id, value)}
