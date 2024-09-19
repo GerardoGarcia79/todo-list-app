@@ -48,3 +48,5 @@ export default tseslint.config({
   },
 })
 ```
+## About the project
+You can see the project here: https://todo-list-app-topaz-psi.vercel.app/
